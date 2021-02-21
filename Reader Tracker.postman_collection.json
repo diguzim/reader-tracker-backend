@@ -145,6 +145,30 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Destroy Book",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/books/{{book_id}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"{{book_id}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

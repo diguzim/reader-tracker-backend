@@ -1,4 +1,4 @@
-class Api::V1::BooksController < ActionController::API
+class Api::V1::BooksController < ApplicationController
   def index
     books = Book.all
     render json: { results: books }.to_json, status: :ok

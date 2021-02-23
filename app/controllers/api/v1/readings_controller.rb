@@ -6,10 +6,11 @@ class Api::V1::ReadingsController < ApplicationController
     json_response(@book.readings)
   end
 
-  def create
-  end
-
   def show
+    json_response(@reading)
+  end
+  
+  def create
   end
 
   def update
@@ -26,5 +27,9 @@ class Api::V1::ReadingsController < ApplicationController
 
   def set_book
     @book = Book.find(params[:book_id])
+  end
+
+  def set_reading
+    @reading = @book.readings.find_by!(id: params[:id]) if @book
   end
 end

@@ -9,6 +9,163 @@
 			"name": "Books",
 			"item": [
 				{
+					"name": "Readings",
+					"item": [
+						{
+							"name": "Get Readings",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domain}}/api/v1/books/{{book_id}}/readings",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"books",
+										"{{book_id}}",
+										"readings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Reading",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domain}}/api/v1/books/{{book_id}}/readings/{{reading_id}}",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"books",
+										"{{book_id}}",
+										"readings",
+										"{{reading_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Reading",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "start_date",
+											"value": "{{reading_start_date}}",
+											"type": "text"
+										},
+										{
+											"key": "finish_date",
+											"value": "{{reading_finish_date}}",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "{{reading_status}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{domain}}/api/v1/books/{{book_id}}/readings",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"books",
+										"{{book_id}}",
+										"readings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Reading",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "start_date",
+											"value": "{{reading_start_date}}",
+											"type": "text"
+										},
+										{
+											"key": "finish_date",
+											"value": "{{reading_finish_date}}",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "{{reading_status}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{domain}}/api/v1/books/{{book_id}}/readings/{{reading_id}}",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"books",
+										"{{book_id}}",
+										"readings",
+										"{{reading_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Destroy Reading",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{domain}}/api/v1/books/{{book_id}}/readings/{{reading_id}}",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"books",
+										"{{book_id}}",
+										"readings",
+										"{{reading_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Get books",
 					"request": {
 						"method": "GET",

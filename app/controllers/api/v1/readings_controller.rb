@@ -1,4 +1,5 @@
 class Api::V1::ReadingsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_book
   before_action :set_reading, only: [:show, :update, :destroy]
   

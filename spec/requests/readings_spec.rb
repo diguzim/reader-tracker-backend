@@ -5,9 +5,11 @@ RSpec.describe 'Readings API', type: :request do
   let!(:readings) { create_list(:reading, 20, book_id: book.id) }
   let!(:book_id) { book.id }
   let(:reading_id) { readings.first.id }
-  
+  let(:user) { create(:user) }
+  let(:auth_headers) { Devise::JWT::TestHelpers.auth_headers({}, user) }
+
   describe 'GET /books/:book_id/readings' do
-    before { get "/api/v1/books/#{book_id}/readings" }
+    before { get "/api/v1/books/#{book_id}/readings", headers: auth_headers }
 
     context 'when book exists' do
       it 'returns status code 200' do
@@ -33,7 +35,7 @@ RSpec.describe 'Readings API', type: :request do
   end
 
   describe 'GET /books/:book_id/readings/:reading_id' do
-    before { get "/api/v1/books/#{book_id}/readings/#{reading_id}" }
+    before { get "/api/v1/books/#{book_id}/readings/#{reading_id}", headers: auth_headers }
 
     context 'when reading exists' do
       it 'returns status code 200' do
@@ -62,7 +64,7 @@ RSpec.describe 'Readings API', type: :request do
     let(:valid_attributes) { { start_date: Date.today, finish_date: Date.today, status: :in_progress } }
 
     context 'when request attributes are valid' do
-      before { post "/api/v1/books/#{book_id}/readings", params: valid_attributes }
+      before { post "/api/v1/books/#{book_id}/readings", params: valid_attributes, headers: auth_headers }
 
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
@@ -70,7 +72,7 @@ RSpec.describe 'Readings API', type: :request do
     end
 
     context 'when request attributes are valid' do
-      before { post "/api/v1/books/#{book_id}/readings", params: {} }
+      before { post "/api/v1/books/#{book_id}/readings", params: {}, headers: auth_headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -85,7 +87,7 @@ RSpec.describe 'Readings API', type: :request do
   describe 'PUT /books/:book_id/readings/:reading_id' do
     let(:valid_attributes) { { status: :finished } }
 
-    before { put "/api/v1/books/#{book_id}/readings/#{reading_id}", params: valid_attributes }
+    before { put "/api/v1/books/#{book_id}/readings/#{reading_id}", params: valid_attributes, headers: auth_headers }
 
     context 'when reading exists' do
       it 'returns status code 204' do
@@ -112,7 +114,7 @@ RSpec.describe 'Readings API', type: :request do
   end
 
   describe 'PUT /books/:book_id/readings/:reading_id' do
-    before { delete "/api/v1/books/#{book_id}/readings/#{reading_id}" }
+    before { delete "/api/v1/books/#{book_id}/readings/#{reading_id}", headers: auth_headers }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

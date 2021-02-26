@@ -2,9 +2,11 @@ class Api::V1::ReadingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_book
   before_action :set_reading, only: [:show, :update, :destroy]
+  before_action :check_permission!, only: [:show, :update, :destroy]
   
   def index
-    json_response(@book.readings)
+    readings = @book.readings.where(user_id: current_user.id)
+    json_response(readings)
   end
 
   def show
@@ -12,7 +14,9 @@ class Api::V1::ReadingsController < ApplicationController
   end
   
   def create
-    reading = @book.readings.create!(reading_params)
+    reading = @book.readings.new(reading_params)
+    reading.user = current_user
+    reading.save!
     json_response(reading, :created)
   end
 
@@ -38,5 +42,9 @@ class Api::V1::ReadingsController < ApplicationController
 
   def set_reading
     @reading = @book.readings.find_by!(id: params[:id]) if @book
+  end
+
+  def check_permission!
+    return_forbidden_resource unless @reading.user.id == current_user.id
   end
 end

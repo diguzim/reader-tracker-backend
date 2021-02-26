@@ -2,14 +2,15 @@ require 'rails_helper'
 require 'devise/jwt/test_helpers'
 
 RSpec.describe 'Books API', type: :request do
-  let!(:books) { create_list(:book, 10) }
-  let(:book_id) { books.first.id }
   let(:user) { create(:user) }
+  let(:wrong_user) { create(:user) }
+  let!(:books) { create_list(:book, 10, user_id: user.id) }
+  let(:book_id) { books.first.id }
+  let(:auth_headers) { Devise::JWT::TestHelpers.auth_headers({}, user) }
+  let(:wrong_auth_headers) { Devise::JWT::TestHelpers.auth_headers({}, wrong_user) }
 
   describe 'GET /books' do
-    before do
-      get '/api/v1/books'
-    end
+    before { get '/api/v1/books' }
 
     it 'return books' do
       expect(json).not_to be_empty
@@ -52,10 +53,7 @@ RSpec.describe 'Books API', type: :request do
     let(:valid_attributes) { { name: 'Some Name', author: 'Some Author', genre: 'Some Genre', pages: 100, relevance: 5 } }
 
     context 'when the request is valid' do
-      before do
-        auth_headers = Devise::JWT::TestHelpers.auth_headers({}, user)
-        post '/api/v1/books', params: valid_attributes, headers: auth_headers
-      end 
+      before { post '/api/v1/books', params: valid_attributes, headers: auth_headers }
 
       it 'creates a book' do
         expect(json['name']).to eq('Some Name')
@@ -71,10 +69,7 @@ RSpec.describe 'Books API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before do
-        auth_headers = Devise::JWT::TestHelpers.auth_headers({}, user)
-        post '/api/v1/books', params: { name: 'Foobar' }, headers: auth_headers
-      end
+      before { post '/api/v1/books', params: { name: 'Foobar' }, headers: auth_headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -87,9 +82,7 @@ RSpec.describe 'Books API', type: :request do
     end
 
     context 'when the request is not authenticated' do
-      before do
-        post '/api/v1/books', params: { name: 'Foobar' }
-      end
+      before { post '/api/v1/books', params: { name: 'Foobar' } }
 
       it 'returns status code 401' do
         expect(response).to have_http_status(401)
@@ -105,61 +98,71 @@ RSpec.describe 'Books API', type: :request do
   describe 'PUT books/:id' do
     let(:valid_attributes) { { name: 'Shopping' } }
 
-    context 'when the record exists' do
-      before do
-        auth_headers = Devise::JWT::TestHelpers.auth_headers({}, user)
-        put "/api/v1/books/#{book_id}", params: valid_attributes, headers: auth_headers
+    context 'when proper user is requesting' do
+      context 'when the record exists' do
+        before { put "/api/v1/books/#{book_id}", params: valid_attributes, headers: auth_headers }
+  
+        it 'updates the record' do
+          expect(response.body).to be_empty
+        end
+  
+        it 'returns status code 204' do
+          expect(response).to have_http_status(204)
+        end
       end
-
-      it 'updates the record' do
-        expect(response.body).to be_empty
-      end
-
-      it 'returns status code 204' do
-        expect(response).to have_http_status(204)
+  
+      context 'when the request is not authenticated' do
+        before { put "/api/v1/books/#{book_id}", params: valid_attributes }
+  
+        it 'returns status code 401' do
+          expect(response).to have_http_status(401)
+        end
+  
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match(/You need to sign in or sign up before continuing./)
+        end
       end
     end
 
-    context 'when the request is not authenticated' do
-      before do
-        put "/api/v1/books/#{book_id}", params: valid_attributes
-      end
+    context 'when unproper user is requesting' do
+      before { put "/api/v1/books/#{book_id}", params: valid_attributes, headers: wrong_auth_headers }
 
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-
-      it 'returns a validation failure message' do
-        expect(response.body)
-          .to match(/You need to sign in or sign up before continuing./)
+      it 'should report permission errors' do
+        report_forbidden_errors
       end
     end
   end
 
   describe 'DELETE books/:id' do
-    context 'when the record exists' do
-      before do
-        auth_headers = Devise::JWT::TestHelpers.auth_headers({}, user)
-        delete "/api/v1/books/#{book_id}", headers: auth_headers
+    context 'when proper user is requesting' do
+      context 'when the record exists' do
+        before { delete "/api/v1/books/#{book_id}", headers: auth_headers }
+    
+        it 'returns status code 204' do
+          expect(response).to have_http_status(204)
+        end
       end
   
-      it 'returns status code 204' do
-        expect(response).to have_http_status(204)
+      context 'when the request is not authenticated' do
+        before { delete "/api/v1/books/#{book_id}" }
+  
+        it 'returns status code 401' do
+          expect(response).to have_http_status(401)
+        end
+  
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match(/You need to sign in or sign up before continuing./)
+        end
       end
     end
 
-    context 'when the request is not authenticated' do
-      before do
-        delete "/api/v1/books/#{book_id}"
-      end
+    context 'when unproper user is requesting' do
+      before { delete "/api/v1/books/#{book_id}", headers: wrong_auth_headers }
 
-      it 'returns status code 401' do
-        expect(response).to have_http_status(401)
-      end
-
-      it 'returns a validation failure message' do
-        expect(response.body)
-          .to match(/You need to sign in or sign up before continuing./)
+      it 'should report permission errors' do
+        report_forbidden_errors
       end
     end
   end

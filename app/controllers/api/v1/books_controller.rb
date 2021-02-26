@@ -1,6 +1,7 @@
 class Api::V1::BooksController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_book, only: [:show, :update, :destroy]
+  before_action :check_permission!, only: [:update, :destroy]
   
   def index
     @books = Book.all
@@ -8,7 +9,7 @@ class Api::V1::BooksController < ApplicationController
   end
 
   def create
-    @book = Book.create!(book_params)
+    @book = current_user.books.create!(book_params)
     json_response(@book, :created)
   end
 
@@ -31,8 +32,12 @@ class Api::V1::BooksController < ApplicationController
   def book_params
     params.permit(:name, :author, :genre, :pages, :relevance)
   end
-
+  
   def set_book
     @book = Book.find(params[:id])
+  end
+
+  def check_permission!
+    return_forbidden_resource unless @book.user.id == current_user.id
   end
 end

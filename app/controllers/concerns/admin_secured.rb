@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Secured
+module AdminSecured
   extend ActiveSupport::Concern
 
   included do
@@ -10,7 +10,7 @@ module Secured
   private
 
   def authenticate_request!
-    auth_token
+    @auth_payload, @auth_header = auth_token
     # This should be improved based on the logic that is required further
     # Check https://auth0.com/docs/quickstart/backend/rails#validate-scopes
   rescue JWT::VerificationError, JWT::DecodeError

@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  include Secured
+  include AdminSecured
   before_action :set_user
 
   def destroy

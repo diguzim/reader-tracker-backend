@@ -38,5 +38,6 @@ module ApiOnly
     config.api_only = true
     config.generators.test_framework :rspec
     config.generators.integration_tool :rspec
+    config.autoload_paths << Rails.root.join('lib')
   end
 end

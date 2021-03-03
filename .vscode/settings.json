@@ -1,0 +1,11 @@
+{
+  "ruby.format": "rubocop",
+  "solargraph.useBundler": true,
+  "solargraph.diagnostics": true,
+  "solargraph.hover": true,
+  "solargraph.autoformat": true,
+  "solargraph.formatting": true,
+  "solargraph.symbols": true,
+  "solargraph.definitions": true,
+  "solargraph.references": true
+}

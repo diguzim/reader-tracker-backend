@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "kaiwood.endwise",
+    "mikestead.dotenv",
+    "karunamurti.rspec-snippets",
+    "rebornix.ruby",
+    "castwide.solargraph",
+    "wingrunr21.vscode-ruby",
+    "vscode-icons-team.vscode-icons"
+  ]
+}

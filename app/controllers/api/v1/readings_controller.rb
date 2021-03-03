@@ -1,50 +1,56 @@
-class Api::V1::ReadingsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_book
-  before_action :set_reading, only: [:show, :update, :destroy]
-  before_action :check_permission!, only: [:show, :update, :destroy]
-  
-  def index
-    readings = @book.readings.where(user_id: current_user.id)
-    json_response(readings)
-  end
+# frozen_string_literal: true
 
-  def show
-    json_response(@reading)
-  end
-  
-  def create
-    reading = @book.readings.new(reading_params)
-    reading.user = current_user
-    reading.save!
-    json_response(reading, :created)
-  end
+module Api
+  module V1
+    class ReadingsController < ApplicationController
+      before_action :authenticate_user!
+      before_action :set_book
+      before_action :set_reading, only: %i[show update destroy]
+      before_action :check_permission!, only: %i[show update destroy]
 
-  def update
-    @reading.update!(reading_params)
-    head :no_content
-  end
+      def index
+        readings = @book.readings.where(user_id: current_user.id)
+        json_response(readings)
+      end
 
-  def destroy
-    @reading.destroy!
-    head :no_content
-  end
+      def show
+        json_response(@reading)
+      end
 
-  private
-  
-  def reading_params
-    params.permit(:start_date, :finish_date, :status)
-  end
+      def create
+        reading = @book.readings.new(reading_params)
+        reading.user = current_user
+        reading.save!
+        json_response(reading, :created)
+      end
 
-  def set_book
-    @book = Book.find(params[:book_id])
-  end
+      def update
+        @reading.update!(reading_params)
+        head :no_content
+      end
 
-  def set_reading
-    @reading = @book.readings.find_by!(id: params[:id]) if @book
-  end
+      def destroy
+        @reading.destroy!
+        head :no_content
+      end
 
-  def check_permission!
-    return_forbidden_resource unless @reading.user.id == current_user.id
+      private
+
+      def reading_params
+        params.permit(:start_date, :finish_date, :status)
+      end
+
+      def set_book
+        @book = Book.find(params[:book_id])
+      end
+
+      def set_reading
+        @reading = @book.readings.find_by!(id: params[:id]) if @book
+      end
+
+      def check_permission!
+        return_forbidden_resource unless @reading.user.id == current_user.id
+      end
+    end
   end
 end

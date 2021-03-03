@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'devise/jwt/test_helpers'
 
@@ -50,7 +52,9 @@ RSpec.describe 'Books API', type: :request do
   end
 
   describe 'POST /books' do
-    let(:valid_attributes) { { name: 'Some Name', author: 'Some Author', genre: 'Some Genre', pages: 100, relevance: 5 } }
+    let(:valid_attributes) do
+      { name: 'Some Name', author: 'Some Author', genre: 'Some Genre', pages: 100, relevance: 5 }
+    end
 
     context 'when the request is valid' do
       before { post '/api/v1/books', params: valid_attributes, headers: auth_headers }
@@ -101,23 +105,23 @@ RSpec.describe 'Books API', type: :request do
     context 'when proper user is requesting' do
       context 'when the record exists' do
         before { put "/api/v1/books/#{book_id}", params: valid_attributes, headers: auth_headers }
-  
+
         it 'updates the record' do
           expect(response.body).to be_empty
         end
-  
+
         it 'returns status code 204' do
           expect(response).to have_http_status(204)
         end
       end
-  
+
       context 'when the request is not authenticated' do
         before { put "/api/v1/books/#{book_id}", params: valid_attributes }
-  
+
         it 'returns status code 401' do
           expect(response).to have_http_status(401)
         end
-  
+
         it 'returns a validation failure message' do
           expect(response.body)
             .to match(/You need to sign in or sign up before continuing./)
@@ -138,19 +142,19 @@ RSpec.describe 'Books API', type: :request do
     context 'when proper user is requesting' do
       context 'when the record exists' do
         before { delete "/api/v1/books/#{book_id}", headers: auth_headers }
-    
+
         it 'returns status code 204' do
           expect(response).to have_http_status(204)
         end
       end
-  
+
       context 'when the request is not authenticated' do
         before { delete "/api/v1/books/#{book_id}" }
-  
+
         it 'returns status code 401' do
           expect(response).to have_http_status(401)
         end
-  
+
         it 'returns a validation failure message' do
           expect(response.body)
             .to match(/You need to sign in or sign up before continuing./)

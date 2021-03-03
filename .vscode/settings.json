@@ -1,5 +1,4 @@
 {
-  "ruby.format": "rubocop",
   "solargraph.useBundler": true,
   "solargraph.diagnostics": true,
   "solargraph.hover": true,

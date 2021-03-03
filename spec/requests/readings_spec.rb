@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'Readings API', type: :request do
@@ -26,7 +28,7 @@ RSpec.describe 'Readings API', type: :request do
 
     context 'when book doesn\'t exists' do
       let(:book_id) { 0 }
-      
+
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
       end
@@ -40,24 +42,24 @@ RSpec.describe 'Readings API', type: :request do
   describe 'GET /books/:book_id/readings/:reading_id' do
     context 'when proper user is requesting' do
       before { get "/api/v1/books/#{book_id}/readings/#{reading_id}", headers: auth_headers }
-  
+
       context 'when reading exists' do
         it 'returns status code 200' do
           expect(response).to have_http_status(200)
         end
-  
+
         it 'returns the reading' do
           expect(json['id']).to eq(reading_id)
         end
       end
-  
+
       context 'when reading does not exists' do
         let(:reading_id) { 0 }
-  
+
         it 'returns status code 404' do
           expect(response).to have_http_status(404)
         end
-        
+
         it 'returns a not found message' do
           expect(response.body).to match(/Couldn't find Reading/)
         end
@@ -85,7 +87,7 @@ RSpec.describe 'Readings API', type: :request do
 
     context 'when request attributes are not valid' do
       before { post "/api/v1/books/#{book_id}/readings", params: {}, headers: auth_headers }
-      
+
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
       end
@@ -101,25 +103,25 @@ RSpec.describe 'Readings API', type: :request do
 
     context 'when proper user is requesting' do
       before { put "/api/v1/books/#{book_id}/readings/#{reading_id}", params: valid_attributes, headers: auth_headers }
-  
+
       context 'when reading exists' do
         it 'returns status code 204' do
           expect(response).to have_http_status(204)
         end
-  
+
         it 'updates the reading' do
           updated_reading = Reading.find(reading_id)
-          expect(updated_reading.status).to eq("finished") # Not sure how to implement it better
+          expect(updated_reading.status).to eq('finished') # Not sure how to implement it better
         end
       end
-  
+
       context 'when reading doesn\'t exists' do
         let(:reading_id) { 0 }
-  
+
         it 'returns status code 404' do
           expect(response).to have_http_status(404)
         end
-  
+
         it 'returns a not found message' do
           expect(response.body).to match(/Couldn't find Reading/)
         end
@@ -127,7 +129,9 @@ RSpec.describe 'Readings API', type: :request do
     end
 
     context 'when unproper user is requesting' do
-      before { put "/api/v1/books/#{book_id}/readings/#{reading_id}", params: valid_attributes, headers: wrong_auth_headers }
+      before do
+        put "/api/v1/books/#{book_id}/readings/#{reading_id}", params: valid_attributes, headers: wrong_auth_headers
+      end
 
       it 'should report permission errors' do
         report_forbidden_errors
@@ -138,7 +142,7 @@ RSpec.describe 'Readings API', type: :request do
   describe 'PUT /books/:book_id/readings/:reading_id' do
     context 'when proper user is requesting' do
       before { delete "/api/v1/books/#{book_id}/readings/#{reading_id}", headers: auth_headers }
-  
+
       it 'returns status code 204' do
         expect(response).to have_http_status(204)
       end

@@ -22,6 +22,7 @@ module Api
       end
 
       def update
+        authorize @book
         @book.update(book_params)
         head :no_content
       end

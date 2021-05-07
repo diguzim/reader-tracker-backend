@@ -5,6 +5,7 @@ module Api
     class AuthorsController < ApplicationController
       before_action :authenticate_user!, except: %i[index show]
       before_action :set_author, only: %i[show update destroy]
+      before_action :check_permission!, only: %i[update destroy]
 
       def index
         @authors = Author.all
@@ -40,6 +41,10 @@ module Api
 
       def set_author
         @author = Author.find(params[:id])
+      end
+
+      def check_permission!
+        return_forbidden_resource unless @author.user.id == current_user.id
       end
     end
   end

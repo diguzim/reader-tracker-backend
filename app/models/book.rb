@@ -2,6 +2,8 @@
 
 class Book < ApplicationRecord
   has_many :readings, dependent: :destroy
+  has_many :authorships
+  has_many :authors, through: :authorships
   belongs_to :user
 
   validates_presence_of :name

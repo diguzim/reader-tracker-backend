@@ -10,7 +10,5 @@ class CreateAuthors < ActiveRecord::Migration[6.1]
     end
 
     remove_column :books, :author, :string
-
-    create_join_table :authors, :books
   end
 end

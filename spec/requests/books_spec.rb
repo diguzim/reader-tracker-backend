@@ -53,7 +53,7 @@ RSpec.describe 'Books API', type: :request do
 
   describe 'POST /books' do
     let(:valid_attributes) do
-      { name: 'Some Name', author: 'Some Author', genre: 'Some Genre', pages: 100, relevance: 5 }
+      { name: 'Some Name', genre: 'Some Genre', pages: 100, relevance: 5 }
     end
 
     context 'when the request is valid' do
@@ -61,7 +61,6 @@ RSpec.describe 'Books API', type: :request do
 
       it 'creates a book' do
         expect(json['name']).to eq('Some Name')
-        expect(json['author']).to eq('Some Author')
         expect(json['genre']).to eq('Some Genre')
         expect(json['pages']).to eq(100)
         expect(json['relevance']).to eq(5)
@@ -73,7 +72,7 @@ RSpec.describe 'Books API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/api/v1/books', params: { name: 'Foobar' }, headers: auth_headers }
+      before { post '/api/v1/books', params: {}, headers: auth_headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -81,7 +80,7 @@ RSpec.describe 'Books API', type: :request do
 
       it 'returns a validation failure message' do
         expect(response.body)
-          .to match(/Validation failed: Author can't be blank/)
+          .to match(/Validation failed: Name can't be blank/)
       end
     end
 

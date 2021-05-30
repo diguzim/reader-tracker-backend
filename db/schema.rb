@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 2021_05_07_135605) do
     t.integer "relevance"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "user_id"
+    t.bigint "user_id"
     t.index ["user_id"], name: "index_books_on_user_id"
   end
 
@@ -51,13 +51,13 @@ ActiveRecord::Schema.define(version: 2021_05_07_135605) do
   end
 
   create_table "readings", force: :cascade do |t|
-    t.integer "book_id", null: false
+    t.bigint "book_id", null: false
     t.datetime "start_date"
     t.datetime "finish_date"
     t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "user_id"
+    t.bigint "user_id"
     t.index ["book_id"], name: "index_readings_on_book_id"
     t.index ["user_id"], name: "index_readings_on_user_id"
   end

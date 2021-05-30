@@ -8,31 +8,27 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-user = User.create({
-                     email: 'rodrigomarcondes2000@gmail.com',
-                     password: 'password',
-                     confirmed_at: DateTime.now
-                   })
+User.create({ email: 'rodrigomarcondes2000@gmail.com', password: 'password', confirmed_at: DateTime.now })
 
-books = [
-  {
-    name: '1984',
-    author: 'George Orwell',
-    genre: 'Politics, Sci-fi',
-    pages: 300,
-    relevance: 10,
-    user_id: user.id
-  },
-  {
-    name: 'Projeto Nacional - O dever da esperança',
-    author: 'Ciro Ferreira Gomes',
-    genre: 'Politics, Economy',
-    pages: 300,
-    relevance: 10,
-    user_id: user.id
-  }
-]
+# books = [
+#   {
+#     name: '1984',
+#     author: 'George Orwell',
+#     genre: 'Politics, Sci-fi',
+#     pages: 300,
+#     relevance: 10,
+#     user_id: user.id
+#   },
+#   {
+#     name: 'Projeto Nacional - O dever da esperança',
+#     author: 'Ciro Ferreira Gomes',
+#     genre: 'Politics, Economy',
+#     pages: 300,
+#     relevance: 10,
+#     user_id: user.id
+#   }
+# ]
 
-books.each do |book|
-  Book.create(book)
-end
+# books.each do |book|
+#   Book.create(book)
+# end

@@ -1,25 +1,21 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: 5
+  host: <%= ENV['DATABASE_HOST'] %>
+  port: <%= ENV['DATABASE_PORT'] %>
+  database: <%= ENV['DATABASE_NAME'] %>
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
   timeout: 5000
 
 development:
   <<: *default
-  database: reader_tracker_development
-  host: localhost
-  username: reader_tracker
-  password: password
 
 test:
   <<: *default
-  database: reader_tracker_test
-  host: localhost
-  username: reader_tracker
-  password: password
+  database: <%= ENV['DATABASE_NAME'] %>_test
 
 production:
   <<: *default
-  database: reader_tracker_production
-  username: reader_tracker_backend
-  password: <%= ENV['READER_TRACKER_DATABASE_PASSWORD'] %>
+
